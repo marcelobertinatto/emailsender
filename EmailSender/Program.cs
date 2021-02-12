@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace EmailSender
 {
@@ -9,44 +7,52 @@ namespace EmailSender
     {
         static void Main(string[] args)
         {
-
-            var contactList = GetContactList();
-
-            GmailClientInfo client = new GmailClientInfo() {
-                 GmailUserEmail= "jvssbrito@gmail.com",
-                 GmailUserPassword= "mwkevjfatwzqrdpg",                  
-            };
-
-            IEmailSender GmailSender = new GmailEmailSender(client);
-
-            foreach (var item in contactList)
+            try
             {
-                if (item.Key.Equals("Marcelo Bertinatto D' Onofrio"))
+                var contactList = GetContactList();
+
+                GmailClientInfo client = new GmailClientInfo()
                 {
-                    EmailMessage Message = new EmailMessage()
-                    {
-                        TO = new List<string>() { item.Key.ToString() },
-                        CC = null,
-                        Subject = "Está equipe de traders trouxeram a melhor sala de sinais da Europa para o Brasil. Venha conhecer agora!",
-                        Body = GetBody(item.Value.ToString()),
-                        IsBodyHtml = true
-                    };
+                    GmailUserEmail = "jvssbrito@gmail.com",
+                    GmailUserPassword = "mwkevjfatwzqrdpg",
+                };
 
-                    EmailSendResult Result = GmailSender.SendEmail(Message);
-                    if (Result.IsMessageDelivered)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("Email Is Delivered!");
-                        Console.ReadLine();
+                IEmailSender GmailSender = new GmailEmailSender(client);
 
+                foreach (var item in contactList)
+                {
+                    if (item.Value.Equals("marcelobertinatto@hotmail.com"))
+                    {
+
+                        EmailMessage Message = new EmailMessage()
+                        {
+                            TO = new List<string>() { item.Value.ToString() },
+                            CC = null,
+                            Subject = "Está equipe de traders trouxeram a melhor sala de sinais da Europa para o Brasil. Venha conhecer agora!",
+                            Body = GetBody(item.Key.ToString()),
+                            IsBodyHtml = true
+                        };
+
+                        EmailSendResult Result = GmailSender.SendEmail(Message);
+                        if (Result.IsMessageDelivered)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("Email Is Delivered!");
+                            Console.ReadLine();
+
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            string error = string.Format("Email is not delivered due to following error \r\n{0}", Result.Error.Message);
+                            Console.WriteLine(error);
+                        }
                     }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        string error = string.Format("Email is not delivered due to following error \r\n{0}", Result.Error.Message);
-                        Console.WriteLine(error);
-                    }  
                 }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
 
 
@@ -873,276 +879,274 @@ namespace EmailSender
 
         public static Dictionary<string,string> GetContactList()
         {
-            Dictionary<string, string> contactList = new Dictionary<string, string>()
-            {
-                { "Elton de Oliveira Júnior", "elton-tb@hotmail.com" },
-                    { "ROGER RABELLO FERNANDES", "rogerrabello8@gmail.com" },
-                    { "leonardo Camargo Zanetti", "leoczanetti@gmail.com" },
-                    { "Nilva Martins do Nascimento", "nilvafloreira@gmail.com" },
-                    { "Fernando Moreira Braga", "frtnandogalobraga@gmail.com" },
-                    { "Luiz Fernando de Oliveira Gonçalves", "fer1goncalves@gmail.com" },
-                    { "ELITERIO CANISIO HERBERT", "altaircanisiohertz@hotmail.com" },
-                    { "Janderson do Nascimento pereira", "jandersonnp@hotmail.com" },
-                    { "Elves Gonçalves Lima", "elveslima17@gmail.com" },
-                    { "Ilceny Maria Aparecida Almeida", "ilcenym@gmail.com" },
-                    { "Michel Luiz dos Santos Pereira", "tradermcl@gmail.com" },
-                    { "Lucas Mateus Borges dos Santos", "lmateusborgesdossantos@gmail.com" },
-                    { "Thiago de Oliveira Aguilera Higa", "higa_thiago@hotmail.com" },
-                    { "Paulo do Carmo Rosa De Almeida", "paulinhofinancas@gmail.com" },
-                    { "Felipe Boni Jacoboski", "felipejacoboski12@hotmail.com" },
-                    { "Lucas de Souza Marquesa", "lucassouzam2010@gmail.com" },
-                    { "Leonardo Barbosa Menezes", "leonardo.barbosa.m37@gmail.com" },
-                    { "Matheus Carvalho Ronzani", "mronzani1991@gmail.com" },
-                    { "Andreson de Almeida", "andresonalmeida.aaa@gmail.com" },
-                    { "Carlos Hermes", "carloshermes32@gmail.com" },
-                    { "Marcelo Fregoneze", "marcelo_fregoneze@hotmail.com" },
-                    { "Valdecir Dreher", "dreherval@gmail.com" },
-                    { "Diogo Maia Azevedo", "diegoazevedo823@gmail.com" },
-                    { "ocimar aparecido lisboa", "ocimaraplisboa@hotmail.com" },
-                    { "EUGENIO MARTINELLI", "foimartinelli@gmail.com" },
-                    { "Vitor Abel de Alcântara dos Santos", "vitor.abel77@gmail.com" },
-                    { "Roberto Rodrigues Costa", "atitudemodamaior@hotmail.com" },
-                    { "Rafael Santos Pereira", "rafa_pereira7@hotmail.com" },
-                    { "David Anderson da Silva", "da3922706@gmail.com" },
-                    { "Melquisedeque Welson Dos Anjos", "melquisedequewelson@gmail.com" },
-                    { "Gilcimar santana", "gilcimarsantana@hotmail.com" },
-                    { "LUIZ HENRIQUE DE SOUSA MOREIRA", "luizherinque.moreira10@gmail.com" },
-                    { "Jefferson de Sousa vaes", "jeffersonvaissousa@gmail.com" },
-                    { "Alberson Ribeiro Bruno", "arbruno@bol.com.br" },
-                    { "italo uchoa oliveira", "98iuchoa@gmail.com" },
-                    { "Antonio Augusto da Silveira Muniz", "gustosilveira@hotmail.com" },
-                    { "Cayan das Neves de Mello", "cayanneves@gmail.com" },
-                    { "André Luiz fadanni", "andrefadanni@icloud.com" },
-                    { "CRISTINA ALBUQUERQUE DOUBERIN", "cristinaadouberin@hotmail.com" },
-                    { "Bruno de Souza Barreto", "brunobarretto01@gmail.com" },
-                    { "Josias Mendonça Ramos Júnior", "mendoonca.jr@hotmail.com" },
-                    { "Joice Christ", "joice_christ00@hotmail.com" },
-                    { "Wellington candido da Silva", "wellingtonsilvinha001@gmail.com" },
-                    { "Rodrigo de Queiroz da Costa", "rodrigoqdacosta@gmail.com" },
-                    { "Bruno wilker Teixeira Leal", "brunowilker009@gmail.com" },
-                    { "Aron matheus alencar da silva", "matheusalencar3840@gmail.com" },
-                    { "SAMUEL AMANCIO MOREIRA", "samuelgvicm@hotmail.com" },
-                    { "Thiago Rafael da Silva", "silva_thiago@hotmail.com" },
-                    { "GUILHERME LIDEME DE CASTILHO", "guiihxbox@gmail.com" },
-                    { "Yan Souza de Oliveira", "oliveira.357@outlook.com" },
-                    { "Leandro Henrique Dorighetti Cavalcanti", "leandro.dorighetti@gmail.com" },
-                    { "Vinícius pinto de Rezende", "vprezende@gmail.com" },
-                    { "Jorge Teodoro de Oliveira Júnior", "juniorxt660@outlook.com" },
-                    { "Sidnei Francisco do nascimento Júnior", "sdineij@gmail.com" },
-                    { "Rafael Henrique Ochiliski Gern", "rafagern@gmail.com" },
-                    { "Paulo Santiego Vieira", "paulosantiego@gmail.com" },
-                    { "Felipe Laurentino Carlos", "fe.park@hotmail.com" },
-                    { "iara dos santos freitas", "santosfreitasiara@gmail.com" },
-                    { "João Paulo Lopes de Souza", "jp.joaopaulo1612@gmail.com" },
-                    { "Roberto Guimarães de Oliveira Nascimento", "robertoguimaraes48@hotmail.com" },
-                    { "Abraão Fortes De Carvalho", "carvalhoabraao744@gmail.com" },
-                    { "Douglas Mendonça de Lima", "douglasmendrp@hotmail.com" },
-                    { "José Gustavo Lima", "gustahjr@gmail.com" },
-                    { "Natan Gabriel Beilfuss", "natanbeilfuss@outlook.com" },
-                    { "joao pedro fontes ferraretto", "jp@ferrarettohotel.com.br" },
-                    { "Carla Patrícia Nucci Bueno", "raphael_nucci@yahoo.com.br" },
-                    { "Lucas Ramon Rohr", "lucas_rohr96@hotmail.com" },
-                    { "Diego Pires Muller", "diego3446muller@gmail.com" },
-                    { "Marianne Joya Viera", "joyamelo2000@gmail.com" },
-                    { "Kauan costa santos", "skauan459@gmail.com" },
-                    { "victor cristiano pereira barreto", "hugo.torquato11@hotmail.com" },
-                    { "Gregory Barros Oliveira", "gregorytrader21@gmail.com" },
-                    { "MANOEL DUMKE RAUGUST", "manoeldumke@gmail.com" },
-                    { "KARTHEN J R CHAVES", "karthen.junior@gmail.com" },
-                    { "Thales Santana", "thaleseq@gmail.com" },
-                    { "Joao Francisco Prates Junior", "johnny.fernandes45@gmail.com" },
-                    { "Valdir Domingos de Araujo", "viniaraujo1114@gmail.com" },
-                    { "Robson Brandão Nogueira", "robson.brandao@outlook.com" },
-                    { "Weslley Henrique Alves Ferreira", "weslleyhenriquealves@hotmail.com" },
-                    { "Matheus Gabriel Menghi Soder", "m.soder2508@gmail.com" },
-                    { "Rafael Azevedo Santana", "rafael_santana89@hotmail.com" },
-                    { "Higor Henrique Moreira Cruz", "higao12henrique@gmail.com" },
-                    { "Bruno Deodilio de Macedo Santos", "bruno-santos11@hotmail.com" },
-                    { "Marcos Daniel Rusch", "ruschinho@hotmail.com" },
-                    { "marcos daniel nardini", "marcos_mdn@outlook.com" },
-                    { "Paulo Henrique Martins Ferreira", "fiotph14@gmail.com" },
-                    { "Agnaldo Rael Rodrigues Junior", "agnaldorrj00@gmail.com" },
-                    { "Matheus name amaral", "matheus2504@live.com" },
-                    { "Jefferson Nunes leite", "jeffersonnl1993@gmail.com" },
-                    { "Rudson Aylan Soares ribeiro", "rudsonaylan95@gmail.com" },
-                    { "Hércules de araujo borges", "dinheirodolar93@gmail.com" },
-                    { "Thyago de Oliveira", "ubimed1@hotmail.com" },
-                    { "Giovanni Graciano Vasconcelos", "giovanni.graciano.gg@gmail.com" },
-                    { "Fernanda Hofke da Costa", "hofke78@hotmail.com" },
-                    { "Matheus ferreira Nunes Silva", "matheusferreiragu2@gmail.com" },
-                    { "Tharlles Andrade de Melo", "tharlles_mello@hotmail.com" },
-                    { "Fábio de Sousa Nascimento", "sousafabio758@gmail.com" },
-                    { "Lucas Tadeu Silva Melo", "andreirairdes@hotmail.com" },
-                    { "Frederico jose lima braga leal", "fredericojoseleal@gmail.com" },
-                    { "Wallace oliveira Machado", "machadowallace15@gmail.com" },
-                    { "Edson Pablo", "edsonpablo23@gmail.com" },
-                    { "marcos Rogerio Nogueira Das Chagas Oliveiras", "canalpaoqueijo2@gmail.com" },
-                    { "Haroldo Gondim Torres Neto", "haroldogondim@hotmail.com" },
-                    { "André Matos de oliveira", "andre22matos@gmail.com" },
-                    { "Joao luis Silva Calabres", "joao4luis5@gmail.com" },
-                    { "André Luiz Sete", "sete.andre@hotmail.com" },
-                    { "matheus de oliveira souza", "matheusjs1997@gmail.com" },
-                    { "Luiz Antônio da Silva Ferrari Braga", "luiz.ferrari.braga@hotmail.com" },
-                    { "Jiniane Souza Santos", "santiago.o113@outlook.com" },
-                    { "Lucas araujo da cunha", "lukinhasarau@gmail.com" },
-                    { "Hamilton de Souza Júnior", "hamilton.trader1809@gmail.com" },
-                    { "Jaime Anastácio Verçosa Neto", "jaimevercosa@gmail.com" },
-                    { "Adriano Elias Monteiro Silva e Silva", "adrianoeliasms@gmail.com" },
-                    { "Maria de Fátima dos santos", "euescolhivaroar2000@gmail.com" },
-                    { "Lucas barcellos cesar", "lucas.bc@hotmail.com" },
-                    { "Luiz Gustavo Vieira de Freitas", "lgvf007@gmail.com" },
-                    { "Valto Gomes Pereira", "valtinho2007@outlook.com" },
-                    { "Sadi Antonio de Araujo Junior", "sadi.junior.rs@hotmail.com" },
-                    { "Anderson dos santos", "anderson8213@hotmail.com" },
-                    { "Felipe Nogueira", "felipe.tch@hotmail.com" },
-                    { "Rodrigo Dos Santos Oliveira", "rodrigoedry@hotmail.com" },
-                    { "dennis moura monteiro", "dennismmoura97@gmail.com" },
-                    { "Artur Graçano Ribeiro", "gracano2@gmail.com" },
-                    { "Wagner Dionisio Correia", "wagner-santa@hotmail.com" },
-                    { "Ronaldo Valença dos Santos", "ronyvalsan@gmail.com" },
-                    { "Lucas Vinícius Ferreira da Silva", "lucasvf536@gmail.com" },
-                    { "Bruno Marques Sales", "bruno.m.sales@hotmail.com" },
-                    { "Yan Marcos Pavi", "pocketpavi@gmail.com" },
-                    { "David Anderson da Silva", "dd360110@gmail.com" },
-                    { "williane lima da silva", "vantusoficial2020@gmail.com" },
-                    { "angela maria pastor santana", "angelamaria363836@gmail.com" },
-                    { "Luccas do Carmo Silva", "luccas_cdc@hotmail.com" },
-                    { "PABLO VAGNER DIAS DOS REIS", "pablovddr@gmail.com" },
-                    { "Rosemberg Passos da Costa", "bergfj@hotmail.com" },
-                    { "Alex Laquiman Faria", "alex.laquiman51@gmail.com" },
-                    { "Pedro Moraes Iunes", "pedrinhoiunes@gmail.com" },
-                    { "Anderson de Oliveira Cabral", "anderson.ocabral@gmail.com" },
-                    { "Orlei Moreira Santos", "orleimonetizze001@gmail.com" },
-                    { "Andrew de Mello martinez", "andrewmello.engcivil@gmail.com" },
-                    { "Carlos Juan Lima", "carlosjuanlima7@icloud.com" },
-                    { "Vanderson Juninho Soares", "vanderson-botu@hotmail.com" },
-                    { "Naidson Gama dos Santos", "nulo.net@gmail.com" },
-                    { "Emanoel dos Santos Pereira", "emanueltrader1.et544@gmail.com" },
-                    { "Pedro Henrique Gonçalves Andrade", "pedrodocruzeiro123@hotmail.com" },
-                    { "Gabriel dias de oliveira", "gabrielsanfamily@gmail.com" },
-                    { "Sergio de Mello", "sergio@ishisupuma.com.br" },
-                    { "Alex Luan Sepulveda Suque", "alexsuque18k@gmail.com" },
-                    { "Adriano gramlich Fernandes", "adriano.adriard@gmail.com" },
-                    { "Ronei baldoria Silverio", "ronei_jts90@hotmail.com" },
-                    { "Nicolas Cristian Silveira Batista", "nicolascristian007@gmail.com" },
-                    { "WENICIUS ANTONIO DA CONCEIÇÃO", "w.melhoramentos@gmail.com" },
-                    { "Alessandra Maciel Ferreira", "luizcarlosribeiro198@gmail.com" },
-                    { "Roselane Gomes de Andrade", "laynegomes@hotmail.com" },
-                    { "Rodolfo ramos Lopes da Silva", "rodolforamos2017@gmail.com" },
-                    { "Luan Carlos Oliveira de Aquino", "aquinoinvestimento@gmail.com" },
-                    { "Marcos Wenderson Moreira da Costa", "marcoswenderson241@gmail.com" },
-                    { "Jose geraldo maciel", "gera123trader@gmail.com" },
-                    { "João Victor Da Rocha Pequeno", "joao.rochapeq@gmail.com" },
-                    { "Ulisses Damacena Ribeiro Silva lobo", "ulissesdamacena@gmail.com" },
-                    { "Pedro Gabriel Martins policarpo stumm", "pedrostummfilms@gmail.com" },
-                    { "Leonardo Ribeiro Aquino", "leo_aquino@msn.com" },
-                    { "Elisson Salgado Barros", "salgado.elisson@gmail.com" },
-                    { "Jaime Almeida dos Santos", "jaime.almeida998@gmail.com" },
-                    { "João Omar Correia neto", "joaoomarneto@gmail.com" },
-                    { "Rafael Anderson da Silva", "rafaelsilvajf06@gmail.com" },
-                    { "Rafael Alencar Teixeira", "rafaelalencart@gmail.com" },
-                    { "Juan de Oliveira felix", "juandeoliveirafeliiix@gmail.com" },
-                    { "Carolina Grassmann", "grass.c@hotmail.com" },
-                    { "Bruno Borges", "brunofla27@gmail.com" },
-                    { "Greiciely Mangini de Castro", "greiciely.mangini@gmail.com" },
-                    { "Pedro Igor Rodrigues Lima", "pedroigorr13@gmail.com" },
-                    { "Matheus Ferreira de Assis", "homempeixe202@gmail.com" },
-                    { "Matheus da costa morais", "theuskateordie@hotmail.com" },
-                    { "Cayan das Neves de Mello", "theuskateordie@hotmail.com" },
-                    { "Tiago Vitor de Almeida", "tiago.almeida110833@gmail.com" },
-                    { "Fernando Calmon Figueiredo", "facilclube@gmail.com" },
-                    { "Rogério Vinicius de Jesus Duarte", "rvjdu1@gmail.com" },
-                    { "Matheus menezes vinagreiro", "matheus.vinagreiro03@gmail.com" },
-                    { "Matheus Bueno Lima", "matheusbuenolima@gmail.com" },
-                    { "Jailson Marques Almondes Sousa", "jailsonmarques75@gmail.com" },
-                    { "Mauro de oliveira Salgado", "mauro.elaine@hotmail.com" },
-                    { "ighor Abraão gerlani Gonçalves de Carvalho", "ighor.ab22@icloud.com" },
-                    { "gabriel oliveira dias", "gabrieljesusdias001@gmail.com" },
-                    { "Bruno Hudson Gomes Lourenço", "brunohudson581@gmail.com" },
-                    { "Natália de Faria Faleiros", "nataliafaria000@gmail.com" },
-                    { "Cesar augusto ramirez bustos", "cesaramirez6996@gmail.com" },
-                    { "Gabriel Janousek", "gabrieljanousek@gmail.com" },
-                    { "Suziléa Andréa Leal do Prado", "suzilea.prado@hotmail.com" },
-                    { "Christian da Silva Paim", "paimchristian07@gmail.com" },
-                    { "Marllon eriky theodoro machado", "marlloneriky15@gmail.com" },
-                    { "Jonathan Alves Conde", "jon.ffc@icloud.com" },
-                    { "MARCIO ARAUJO FERREIRA E ALMEIDA", "araujomarcio60@gmail.com" },
-                    { "João paulo aparecido lima", "jplimadiamante@gmail.com" },
-                    { "Rodrigo Nunes Loureiro", "rn01904@gmail.com" },
-                    { "Vinicius silveira de gois", "vinigois8@outlook.com" },
-                    { "Diego da Silva", "diegogas10@gmail.com" },
-                    { "PEDRO BARRETO NETO", "pedrobarretoneto@yahoo.com.br" },
-                    { "Rodrigo Ferreira dos Santos", "rodrigoferreirasantos58@gmail.com" },
-                    { "Otavio Luiz Assis dos Prazeres", "oluiz047@gmail.com" },
-                    { "Antônio Carlos da Silva Araújo", "cabeca.r7@gmail.com" },
-                    { "Jardel de Sousa forte Teixeira", "jardel_20@yahoo.com.br" },
-                    { "Leandro Ribeiro Marcos", "leandro_ribeirvo_marcos@hotmail.com" },
-                    { "Allyson Nascimento Guimarães", "allyson.otaku1@gmail.com" },
-                    { "Shelton Rezende", "sheltonrezende10@gmail.com" },
-                    { "Erica dos Santos Bezerra", "erikaadossantos@gmail.com" },
-                    { "GILSON FREITAS DIAS", "gfdiascontabilidade@gmail.com" },
-                    { "Alessandro Magalhães de Almeida", "magalhaesproducoes@outlook.com" },
-                    { "Natanael Guimarães", "nata.silva10@gmail.com" },
-                    { "André Kaizer Souza", "andrekaizer1997@gmail.com" },
-                    { "Dionatas Boita Veiga", "dionboita@gmail.com" },
-                    { "Rafael Oliveira Farias", "rafa.oliveirafarias@outlook.com" },
-                    { "Antônio Humberto de Sousa Silva", "digitall.contas@gmail.com" },
-                    { "Lucas Matheus Romão Leal", "lucasmrleal@gmail.com" },
-                    { "Omar de Oliveira Osório Neto", "netoomar447@gmail.com" },
-                    { "Everton dos santos nunes", "evertonnunes425@gmail.com" },
-                    { "Marcelo Alves Marques", "malvesmarques@gmail.com" },
-                    { "Flater Junio Germano", "flaterjunior@gmail.com" },
-                    { "Felipe Alves galvao", "felipegalvao8901@gmail.com" },
-                    { "FRANCIS WILLIAN DA SILVA CARDOSO", "contato.nmrkprodutos@gmail.com" },
-                    { "Lucas Oliveira de Souza", "lucasdark01@gmail.com" },
-                    { "Guilherme Fernandes coelho", "guilhermefcoelho@hotmail.com" },
-                    { "Matheus Silva Campos", "campos.mat01@gmail.com" },
-                    { "MARIZELE ALMEIDA DE SOUSA", "marizelealmeidadesousa@gmail.com" },
-                    { "MICHELA DA SILVA COSTA", "michelascosta.adv@gmail.com" },
-                    { "Agenor Pereira da Silva Neto", "elinor.mtm@gmail.com" },
-                    { "Gabriel Fernando Pires Carvalho", "checkpointbrasil0@gmail.com" },
-                    { "João Lucas Marques Alves", "jlmalves2017@gmail.com" },
-                    { "Miguel Oliveira do Rego", "contato.miguel190@icloud.com" },
-                    { "Francesco toschi incerti", "incerti56@gmail.com" },
-                    { "Carlos Eduardo Pinho Neto Figueiredo", "ceneto93@hotmail.com" },
-                    { "Eduardo Domingos Morais Araujo", "0705.araujo.1327@gmail.com" },
-                    { "Leonardo Duarte Sa", "leosa4@hotmail.com" },
-                    { "Marcilio Bruno Ventura", "marciliobruno5@gmail.com" },
-                    { "Francisco de Assis Costa Filho", "segundinho2013@gmail.com" },
-                    { "Luan Gonçalves campista", "luancampista36@gmail.com" },
-                    { "Jhonatan De Aguiar Silva", "jhonatanaguiar013@hotmail.com" },
-                    { "César Henrique da Conceição Figueiredo", "cesarhenriquec507@gmail.com" },
-                    { "Lucas Santos", "lucas.santosfsa@gmail.com" },
-                    { "Gabriel Domingos de Assis", "domingos.gabriel2010@hotmail.com" },
-                    { "Flori Sobrinho", "engenharia.geox@gmail.com" },
-                    { "João Tadeu do Carmo Junior", "jtjacui@yahoo.com.br" },
-                    { "joao vitor alves da silva", "joaovitoralvesover@gmail.com" },
-                    { "Francisco Carlos Marques Barbosa", "carlosmagnum1@yahoo.com.br" },
-                    { "Valdoir Andretta", "valdoirproooz1nnandretta@gmail.com" },
-                    { "Pedro Ivo Souza Ramos", "pedroivoinveste2019@gmail.com" },
-                    { "Thiago Henrique Almeida Ribas", "thiago.hribas@gmail.com" },
-                    { "Joao luis gomes da silva", "joao.confraria@gmail.com" },
-                    { "Maurício Fernandes Machado", "mauricio.fmachado@outlook.com" },
-                    { "Julio Magalhães", "julitomagalhaes@gmail.com" },
-                    { "David Felipe Soares", "davidfelsoares@gmail.com" },
-                    { "MARIA BERENICE ZANANDREA", "estevanportolan123@gmail.com" },
-                    { "Amanda Pereira da Cunha", "renanramalho74@gmail.com" },
-                    { "Diego Oliveira felix", "diegodavilucas2019@gmail.com" },
-                    { "Gabriel Teixeira", "gp291338@gmail.com" },
-                    { "Duane Fernanda Conceição Teixeira", "duanefc@outlook.com" },
-                    { "Darley Wagner Magalhães Ribeiro Junior", "dwjunior26on@gmail.com" },
-                    { "JONATHAS DE MELO CHAGAS", "jonathasdemelochagas@gmail.com" },
-                    { "Vinícius Rodrigo de Almeida Silva", "vinicius_rodrigo10@hotmail.com" },
-                    { "Juan Pereira Freire", "juan.freire.397@gmail.com" },
-                    { "Ricardo Carvalho lima", "ranchoaloisiolima@yahoo.com.br" },
-                    { "Gabriel Dias Nocce", "gabriel.diasnocce@gmail.com" },
-                    { "Luana Pires muller", "luhmuller2001@gmail.com" },
-                    { "Helder Henrique Soares de freitas", "helder10freitas@gmail.com" },
-                    { "Felipe Gabriel Ferreira Winter", "fehnalle@gmail.com" },
-                    { "WAGNER NERY", "juniorwagner485@gmail.com" },
-                    { "Natanael Ferreira da Silva", "fnatanael678@gmail.com" },
-                    { "Marcelo Bertinatto D' Onofrio", "marcelobertinatto@hotmail.com" }
-            };
+            Dictionary<string, string> contactList = new Dictionary<string, string>();
+            contactList.Add("Elton de Oliveira Júnior", "elton-tb@hotmail.com");
+            contactList.Add("ROGER RABELLO FERNANDES", "rogerrabello8@gmail.com");
+            contactList.Add("leonardo Camargo Zanetti", "leoczanetti@gmail.com");
+            contactList.Add("Nilva Martins do Nascimento", "nilvafloreira@gmail.com");
+            contactList.Add("Fernando Moreira Braga", "frtnandogalobraga@gmail.com");
+            contactList.Add("Luiz Fernando de Oliveira Gonçalves", "fer1goncalves@gmail.com");
+            contactList.Add("ELITERIO CANISIO HERBERT", "altaircanisiohertz@hotmail.com");
+            contactList.Add("Janderson do Nascimento pereira", "jandersonnp@hotmail.com");
+            contactList.Add("Elves Gonçalves Lima", "elveslima17@gmail.com");
+            contactList.Add("Ilceny Maria Aparecida Almeida", "ilcenym@gmail.com");
+            contactList.Add("Michel Luiz dos Santos Pereira", "tradermcl@gmail.com");
+            contactList.Add("Lucas Mateus Borges dos Santos", "lmateusborgesdossantos@gmail.com");
+            contactList.Add("Thiago de Oliveira Aguilera Higa", "higa_thiago@hotmail.com");
+            contactList.Add("Paulo do Carmo Rosa De Almeida", "paulinhofinancas@gmail.com");
+            contactList.Add("Felipe Boni Jacoboski", "felipejacoboski12@hotmail.com");
+            contactList.Add("Lucas de Souza Marquesa", "lucassouzam2010@gmail.com");
+            contactList.Add("Leonardo Barbosa Menezes", "leonardo.barbosa.m37@gmail.com");
+            contactList.Add("Matheus Carvalho Ronzani", "mronzani1991@gmail.com");
+            contactList.Add("Andreson de Almeida", "andresonalmeida.aaa@gmail.com");
+            contactList.Add("Carlos Hermes", "carloshermes32@gmail.com");
+            contactList.Add("Marcelo Fregoneze", "marcelo_fregoneze@hotmail.com");
+            contactList.Add("Valdecir Dreher", "dreherval@gmail.com");
+            contactList.Add("Diogo Maia Azevedo", "diegoazevedo823@gmail.com");
+            contactList.Add("ocimar aparecido lisboa", "ocimaraplisboa@hotmail.com");
+            contactList.Add("EUGENIO MARTINELLI", "foimartinelli@gmail.com");
+            contactList.Add("Vitor Abel de Alcântara dos Santos", "vitor.abel77@gmail.com");
+            contactList.Add("Roberto Rodrigues Costa", "atitudemodamaior@hotmail.com");
+            contactList.Add("Rafael Santos Pereira", "rafa_pereira7@hotmail.com");
+            contactList.Add("David Anderson da Silva", "da3922706@gmail.com");
+            contactList.Add("Melquisedeque Welson Dos Anjos", "melquisedequewelson@gmail.com");
+            contactList.Add("Gilcimar santana", "gilcimarsantana@hotmail.com");
+            contactList.Add("LUIZ HENRIQUE DE SOUSA MOREIRA", "luizherinque.moreira10@gmail.com");
+            contactList.Add("Jefferson de Sousa vaes", "jeffersonvaissousa@gmail.com");
+            contactList.Add("Alberson Ribeiro Bruno", "arbruno@bol.com.br");
+            contactList.Add("italo uchoa oliveira", "98iuchoa@gmail.com");
+            contactList.Add("Antonio Augusto da Silveira Muniz", "gustosilveira@hotmail.com");
+            contactList.Add("Cayan das Neves de Mello_", "cayanneves@gmail.com");
+            contactList.Add("André Luiz fadanni", "andrefadanni@icloud.com");
+            contactList.Add("CRISTINA ALBUQUERQUE DOUBERIN", "cristinaadouberin@hotmail.com");
+            contactList.Add("Bruno de Souza Barreto", "brunobarretto01@gmail.com");
+            contactList.Add("Josias Mendonça Ramos Júnior", "mendoonca.jr@hotmail.com");
+            contactList.Add("Joice Christ", "joice_christ00@hotmail.com");
+            contactList.Add("Wellington candido da Silva", "wellingtonsilvinha001@gmail.com");
+            contactList.Add("Rodrigo de Queiroz da Costa", "rodrigoqdacosta@gmail.com");
+            contactList.Add("Bruno wilker Teixeira Leal", "brunowilker009@gmail.com");
+            contactList.Add("Aron matheus alencar da silva", "matheusalencar3840@gmail.com");
+            contactList.Add("SAMUEL AMANCIO MOREIRA", "samuelgvicm@hotmail.com");
+            contactList.Add("Thiago Rafael da Silva", "silva_thiago@hotmail.com");
+            contactList.Add("GUILHERME LIDEME DE CASTILHO", "guiihxbox@gmail.com");
+            contactList.Add("Yan Souza de Oliveira", "oliveira.357@outlook.com");
+            contactList.Add("Leandro Henrique Dorighetti Cavalcanti", "leandro.dorighetti@gmail.com");
+            contactList.Add("Vinícius pinto de Rezende", "vprezende@gmail.com");
+            contactList.Add("Jorge Teodoro de Oliveira Júnior", "juniorxt660@outlook.com");
+            contactList.Add("Sidnei Francisco do nascimento Júnior", "sdineij@gmail.com");
+            contactList.Add("Rafael Henrique Ochiliski Gern", "rafagern@gmail.com");
+            contactList.Add("Paulo Santiego Vieira", "paulosantiego@gmail.com");
+            contactList.Add("Felipe Laurentino Carlos", "fe.park@hotmail.com");
+            contactList.Add("iara dos santos freitas", "santosfreitasiara@gmail.com");
+            contactList.Add("João Paulo Lopes de Souza", "jp.joaopaulo1612@gmail.com");
+            contactList.Add("Roberto Guimarães de Oliveira Nascimento", "robertoguimaraes48@hotmail.com");
+            contactList.Add("Abraão Fortes De Carvalho", "carvalhoabraao744@gmail.com");
+            contactList.Add("Douglas Mendonça de Lima", "douglasmendrp@hotmail.com");
+            contactList.Add("José Gustavo Lima", "gustahjr@gmail.com");
+            contactList.Add("Natan Gabriel Beilfuss", "natanbeilfuss@outlook.com");
+            contactList.Add("joao pedro fontes ferraretto", "jp@ferrarettohotel.com.br");
+            contactList.Add("Carla Patrícia Nucci Bueno", "raphael_nucci@yahoo.com.br");
+            contactList.Add("Lucas Ramon Rohr", "lucas_rohr96@hotmail.com");
+            contactList.Add("Diego Pires Muller", "diego3446muller@gmail.com");
+            contactList.Add("Marianne Joya Viera", "joyamelo2000@gmail.com");
+            contactList.Add("Kauan costa santos", "skauan459@gmail.com");
+            contactList.Add("victor cristiano pereira barreto", "hugo.torquato11@hotmail.com");
+            contactList.Add("Gregory Barros Oliveira", "gregorytrader21@gmail.com");
+            contactList.Add("MANOEL DUMKE RAUGUST", "manoeldumke@gmail.com");
+            contactList.Add("KARTHEN J R CHAVES", "karthen.junior@gmail.com");
+            contactList.Add("Thales Santana", "thaleseq@gmail.com");
+            contactList.Add("Joao Francisco Prates Junior", "johnny.fernandes45@gmail.com");
+            contactList.Add("Valdir Domingos de Araujo", "viniaraujo1114@gmail.com");
+            contactList.Add("Robson Brandão Nogueira", "robson.brandao@outlook.com");
+            contactList.Add("Weslley Henrique Alves Ferreira", "weslleyhenriquealves@hotmail.com");
+            contactList.Add("Matheus Gabriel Menghi Soder", "m.soder2508@gmail.com");
+            contactList.Add("Rafael Azevedo Santana", "rafael_santana89@hotmail.com");
+            contactList.Add("Higor Henrique Moreira Cruz", "higao12henrique@gmail.com");
+            contactList.Add("Bruno Deodilio de Macedo Santos", "bruno-santos11@hotmail.com");
+            contactList.Add("Marcos Daniel Rusch", "ruschinho@hotmail.com");
+            contactList.Add("marcos daniel nardini", "marcos_mdn@outlook.com");
+            contactList.Add("Paulo Henrique Martins Ferreira", "fiotph14@gmail.com");
+            contactList.Add("Agnaldo Rael Rodrigues Junior", "agnaldorrj00@gmail.com");
+            contactList.Add("Matheus name amaral", "matheus2504@live.com");
+            contactList.Add("Jefferson Nunes leite", "jeffersonnl1993@gmail.com");
+            contactList.Add("Rudson Aylan Soares ribeiro", "rudsonaylan95@gmail.com");
+            contactList.Add("Hércules de araujo borges", "dinheirodolar93@gmail.com");
+            contactList.Add("Thyago de Oliveira", "ubimed1@hotmail.com");
+            contactList.Add("Giovanni Graciano Vasconcelos", "giovanni.graciano.gg@gmail.com");
+            contactList.Add("Fernanda Hofke da Costa", "hofke78@hotmail.com");
+            contactList.Add("Matheus ferreira Nunes Silva", "matheusferreiragu2@gmail.com");
+            contactList.Add("Tharlles Andrade de Melo", "tharlles_mello@hotmail.com");
+            contactList.Add("Fábio de Sousa Nascimento", "sousafabio758@gmail.com");
+            contactList.Add("Lucas Tadeu Silva Melo", "andreirairdes@hotmail.com");
+            contactList.Add("Frederico jose lima braga leal", "fredericojoseleal@gmail.com");
+            contactList.Add("Wallace oliveira Machado", "machadowallace15@gmail.com");
+            contactList.Add("Edson Pablo", "edsonpablo23@gmail.com");
+            contactList.Add("marcos Rogerio Nogueira Das Chagas Oliveiras", "canalpaoqueijo2@gmail.com");
+            contactList.Add("Haroldo Gondim Torres Neto", "haroldogondim@hotmail.com");
+            contactList.Add("André Matos de oliveira", "andre22matos@gmail.com");
+            contactList.Add("Joao luis Silva Calabres", "joao4luis5@gmail.com");
+            contactList.Add("André Luiz Sete", "sete.andre@hotmail.com");
+            contactList.Add("matheus de oliveira souza", "matheusjs1997@gmail.com");
+            contactList.Add("Luiz Antônio da Silva Ferrari Braga", "luiz.ferrari.braga@hotmail.com");
+            contactList.Add("Jiniane Souza Santos", "santiago.o113@outlook.com");
+            contactList.Add("Lucas araujo da cunha", "lukinhasarau@gmail.com");
+            contactList.Add("Hamilton de Souza Júnior", "hamilton.trader1809@gmail.com");
+            contactList.Add("Jaime Anastácio Verçosa Neto", "jaimevercosa@gmail.com");
+            contactList.Add("Adriano Elias Monteiro Silva e Silva", "adrianoeliasms@gmail.com");
+            contactList.Add("Maria de Fátima dos santos", "euescolhivaroar2000@gmail.com");
+            contactList.Add("Lucas barcellos cesar", "lucas.bc@hotmail.com");
+            contactList.Add("Luiz Gustavo Vieira de Freitas", "lgvf007@gmail.com");
+            contactList.Add("Valto Gomes Pereira", "valtinho2007@outlook.com");
+            contactList.Add("Sadi Antonio de Araujo Junior", "sadi.junior.rs@hotmail.com");
+            contactList.Add("Anderson dos santos", "anderson8213@hotmail.com");
+            contactList.Add("Felipe Nogueira", "felipe.tch@hotmail.com");
+            contactList.Add("Rodrigo Dos Santos Oliveira", "rodrigoedry@hotmail.com");
+            contactList.Add("dennis moura monteiro", "dennismmoura97@gmail.com");
+            contactList.Add("Artur Graçano Ribeiro", "gracano2@gmail.com");
+            contactList.Add("Wagner Dionisio Correia", "wagner-santa@hotmail.com");
+            contactList.Add("Ronaldo Valença dos Santos", "ronyvalsan@gmail.com");
+            contactList.Add("Lucas Vinícius Ferreira da Silva", "lucasvf536@gmail.com");
+            contactList.Add("Bruno Marques Sales", "bruno.m.sales@hotmail.com");
+            contactList.Add("Yan Marcos Pavi", "pocketpavi@gmail.com");
+            contactList.Add("David Anderson da Silva_", "dd360110@gmail.com");
+            contactList.Add("williane lima da silva", "vantusoficial2020@gmail.com");
+            contactList.Add("angela maria pastor santana", "angelamaria363836@gmail.com");
+            contactList.Add("Luccas do Carmo Silva", "luccas_cdc@hotmail.com");
+            contactList.Add("PABLO VAGNER DIAS DOS REIS", "pablovddr@gmail.com");
+            contactList.Add("Rosemberg Passos da Costa", "bergfj@hotmail.com");
+            contactList.Add("Alex Laquiman Faria", "alex.laquiman51@gmail.com");
+            contactList.Add("Pedro Moraes Iunes", "pedrinhoiunes@gmail.com");
+            contactList.Add("Anderson de Oliveira Cabral", "anderson.ocabral@gmail.com");
+            contactList.Add("Orlei Moreira Santos", "orleimonetizze001@gmail.com");
+            contactList.Add("Andrew de Mello martinez", "andrewmello.engcivil@gmail.com");
+            contactList.Add("Carlos Juan Lima", "carlosjuanlima7@icloud.com");
+            contactList.Add("Vanderson Juninho Soares", "vanderson-botu@hotmail.com");
+            contactList.Add("Naidson Gama dos Santos", "nulo.net@gmail.com");
+            contactList.Add("Emanoel dos Santos Pereira", "emanueltrader1.et544@gmail.com");
+            contactList.Add("Pedro Henrique Gonçalves Andrade", "pedrodocruzeiro123@hotmail.com");
+            contactList.Add("Gabriel dias de oliveira", "gabrielsanfamily@gmail.com");
+            contactList.Add("Sergio de Mello", "sergio@ishisupuma.com.br");
+            contactList.Add("Alex Luan Sepulveda Suque", "alexsuque18k@gmail.com");
+            contactList.Add("Adriano gramlich Fernandes", "adriano.adriard@gmail.com");
+            contactList.Add("Ronei baldoria Silverio", "ronei_jts90@hotmail.com");
+            contactList.Add("Nicolas Cristian Silveira Batista", "nicolascristian007@gmail.com");
+            contactList.Add("WENICIUS ANTONIO DA CONCEIÇÃO", "w.melhoramentos@gmail.com");
+            contactList.Add("Alessandra Maciel Ferreira", "luizcarlosribeiro198@gmail.com");
+            contactList.Add("Roselane Gomes de Andrade", "laynegomes@hotmail.com");
+            contactList.Add("Rodolfo ramos Lopes da Silva", "rodolforamos2017@gmail.com");
+            contactList.Add("Luan Carlos Oliveira de Aquino", "aquinoinvestimento@gmail.com");
+            contactList.Add("Marcos Wenderson Moreira da Costa", "marcoswenderson241@gmail.com");
+            contactList.Add("Jose geraldo maciel", "gera123trader@gmail.com");
+            contactList.Add("João Victor Da Rocha Pequeno", "joao.rochapeq@gmail.com");
+            contactList.Add("Ulisses Damacena Ribeiro Silva lobo", "ulissesdamacena@gmail.com");
+            contactList.Add("Pedro Gabriel Martins policarpo stumm", "pedrostummfilms@gmail.com");
+            contactList.Add("Leonardo Ribeiro Aquino", "leo_aquino@msn.com");
+            contactList.Add("Elisson Salgado Barros", "salgado.elisson@gmail.com");
+            contactList.Add("Jaime Almeida dos Santos", "jaime.almeida998@gmail.com");
+            contactList.Add("João Omar Correia neto", "joaoomarneto@gmail.com");
+            contactList.Add("Rafael Anderson da Silva", "rafaelsilvajf06@gmail.com");
+            contactList.Add("Rafael Alencar Teixeira", "rafaelalencart@gmail.com");
+            contactList.Add("Juan de Oliveira felix", "juandeoliveirafeliiix@gmail.com");
+            contactList.Add("Carolina Grassmann", "grass.c@hotmail.com");
+            contactList.Add("Bruno Borges", "brunofla27@gmail.com");
+            contactList.Add("Greiciely Mangini de Castro", "greiciely.mangini@gmail.com");
+            contactList.Add("Pedro Igor Rodrigues Lima", "pedroigorr13@gmail.com");
+            contactList.Add("Matheus Ferreira de Assis", "homempeixe202@gmail.com");
+            contactList.Add("Matheus da costa morais", "theuskateordie@hotmail.com");
+            contactList.Add("Cayan das Neves de Mello", "theuskateordie@hotmail.com");
+            contactList.Add("Tiago Vitor de Almeida", "tiago.almeida110833@gmail.com");
+            contactList.Add("Fernando Calmon Figueiredo", "facilclube@gmail.com");
+            contactList.Add("Rogério Vinicius de Jesus Duarte", "rvjdu1@gmail.com");
+            contactList.Add("Matheus menezes vinagreiro", "matheus.vinagreiro03@gmail.com");
+            contactList.Add("Matheus Bueno Lima", "matheusbuenolima@gmail.com");
+            contactList.Add("Jailson Marques Almondes Sousa", "jailsonmarques75@gmail.com");
+            contactList.Add("Mauro de oliveira Salgado", "mauro.elaine@hotmail.com");
+            contactList.Add("ighor Abraão gerlani Gonçalves de Carvalho", "ighor.ab22@icloud.com");
+            contactList.Add("gabriel oliveira dias", "gabrieljesusdias001@gmail.com");
+            contactList.Add("Bruno Hudson Gomes Lourenço", "brunohudson581@gmail.com");
+            contactList.Add("Natália de Faria Faleiros", "nataliafaria000@gmail.com");
+            contactList.Add("Cesar augusto ramirez bustos", "cesaramirez6996@gmail.com");
+            contactList.Add("Gabriel Janousek", "gabrieljanousek@gmail.com");
+            contactList.Add("Suziléa Andréa Leal do Prado", "suzilea.prado@hotmail.com");
+            contactList.Add("Christian da Silva Paim", "paimchristian07@gmail.com");
+            contactList.Add("Marllon eriky theodoro machado", "marlloneriky15@gmail.com");
+            contactList.Add("Jonathan Alves Conde", "jon.ffc@icloud.com");
+            contactList.Add("MARCIO ARAUJO FERREIRA E ALMEIDA", "araujomarcio60@gmail.com");
+            contactList.Add("João paulo aparecido lima", "jplimadiamante@gmail.com");
+            contactList.Add("Rodrigo Nunes Loureiro", "rn01904@gmail.com");
+            contactList.Add("Vinicius silveira de gois", "vinigois8@outlook.com");
+            contactList.Add("Diego da Silva", "diegogas10@gmail.com");
+            contactList.Add("PEDRO BARRETO NETO", "pedrobarretoneto@yahoo.com.br");
+            contactList.Add("Rodrigo Ferreira dos Santos", "rodrigoferreirasantos58@gmail.com");
+            contactList.Add("Otavio Luiz Assis dos Prazeres", "oluiz047@gmail.com");
+            contactList.Add("Antônio Carlos da Silva Araújo", "cabeca.r7@gmail.com");
+            contactList.Add("Jardel de Sousa forte Teixeira", "jardel_20@yahoo.com.br");
+            contactList.Add("Leandro Ribeiro Marcos", "leandro_ribeirvo_marcos@hotmail.com");
+            contactList.Add("Allyson Nascimento Guimarães", "allyson.otaku1@gmail.com");
+            contactList.Add("Shelton Rezende", "sheltonrezende10@gmail.com");
+            contactList.Add("Erica dos Santos Bezerra", "erikaadossantos@gmail.com");
+            contactList.Add("GILSON FREITAS DIAS", "gfdiascontabilidade@gmail.com");
+            contactList.Add("Alessandro Magalhães de Almeida", "magalhaesproducoes@outlook.com");
+            contactList.Add("Natanael Guimarães", "nata.silva10@gmail.com");
+            contactList.Add("André Kaizer Souza", "andrekaizer1997@gmail.com");
+            contactList.Add("Dionatas Boita Veiga", "dionboita@gmail.com");
+            contactList.Add("Rafael Oliveira Farias", "rafa.oliveirafarias@outlook.com");
+            contactList.Add("Antônio Humberto de Sousa Silva", "digitall.contas@gmail.com");
+            contactList.Add("Lucas Matheus Romão Leal", "lucasmrleal@gmail.com");
+            contactList.Add("Omar de Oliveira Osório Neto", "netoomar447@gmail.com");
+            contactList.Add("Everton dos santos nunes", "evertonnunes425@gmail.com");
+            contactList.Add("Marcelo Alves Marques", "malvesmarques@gmail.com");
+            contactList.Add("Flater Junio Germano", "flaterjunior@gmail.com");
+            contactList.Add("Felipe Alves galvao", "felipegalvao8901@gmail.com");
+            contactList.Add("FRANCIS WILLIAN DA SILVA CARDOSO", "contato.nmrkprodutos@gmail.com");
+            contactList.Add("Lucas Oliveira de Souza", "lucasdark01@gmail.com");
+            contactList.Add("Guilherme Fernandes coelho", "guilhermefcoelho@hotmail.com");
+            contactList.Add("Matheus Silva Campos", "campos.mat01@gmail.com");
+            contactList.Add("MARIZELE ALMEIDA DE SOUSA", "marizelealmeidadesousa@gmail.com");
+            contactList.Add("MICHELA DA SILVA COSTA", "michelascosta.adv@gmail.com");
+            contactList.Add("Agenor Pereira da Silva Neto", "elinor.mtm@gmail.com");
+            contactList.Add("Gabriel Fernando Pires Carvalho", "checkpointbrasil0@gmail.com");
+            contactList.Add("João Lucas Marques Alves", "jlmalves2017@gmail.com");
+            contactList.Add("Miguel Oliveira do Rego", "contato.miguel190@icloud.com");
+            contactList.Add("Francesco toschi incerti", "incerti56@gmail.com");
+            contactList.Add("Carlos Eduardo Pinho Neto Figueiredo", "ceneto93@hotmail.com");
+            contactList.Add("Eduardo Domingos Morais Araujo", "0705.araujo.1327@gmail.com");
+            contactList.Add("Leonardo Duarte Sa", "leosa4@hotmail.com");
+            contactList.Add("Marcilio Bruno Ventura", "marciliobruno5@gmail.com");
+            contactList.Add("Francisco de Assis Costa Filho", "segundinho2013@gmail.com");
+            contactList.Add("Luan Gonçalves campista", "luancampista36@gmail.com");
+            contactList.Add("Jhonatan De Aguiar Silva", "jhonatanaguiar013@hotmail.com");
+            contactList.Add("César Henrique da Conceição Figueiredo", "cesarhenriquec507@gmail.com");
+            contactList.Add("Lucas Santos", "lucas.santosfsa@gmail.com");
+            contactList.Add("Gabriel Domingos de Assis", "domingos.gabriel2010@hotmail.com");
+            contactList.Add("Flori Sobrinho", "engenharia.geox@gmail.com");
+            contactList.Add("João Tadeu do Carmo Junior", "jtjacui@yahoo.com.br");
+            contactList.Add("joao vitor alves da silva", "joaovitoralvesover@gmail.com");
+            contactList.Add("Francisco Carlos Marques Barbosa", "carlosmagnum1@yahoo.com.br");
+            contactList.Add("Valdoir Andretta", "valdoirproooz1nnandretta@gmail.com");
+            contactList.Add("Pedro Ivo Souza Ramos", "pedroivoinveste2019@gmail.com");
+            contactList.Add("Thiago Henrique Almeida Ribas", "thiago.hribas@gmail.com");
+            contactList.Add("Joao luis gomes da silva", "joao.confraria@gmail.com");
+            contactList.Add("Maurício Fernandes Machado", "mauricio.fmachado@outlook.com");
+            contactList.Add("Julio Magalhães", "julitomagalhaes@gmail.com");
+            contactList.Add("David Felipe Soares", "davidfelsoares@gmail.com");
+            contactList.Add("MARIA BERENICE ZANANDREA", "estevanportolan123@gmail.com");
+            contactList.Add("Amanda Pereira da Cunha", "renanramalho74@gmail.com");
+            contactList.Add("Diego Oliveira felix", "diegodavilucas2019@gmail.com");
+            contactList.Add("Gabriel Teixeira", "gp291338@gmail.com");
+            contactList.Add("Duane Fernanda Conceição Teixeira", "duanefc@outlook.com");
+            contactList.Add("Darley Wagner Magalhães Ribeiro Junior", "dwjunior26on@gmail.com");
+            contactList.Add("JONATHAS DE MELO CHAGAS", "jonathasdemelochagas@gmail.com");
+            contactList.Add("Vinícius Rodrigo de Almeida Silva", "vinicius_rodrigo10@hotmail.com");
+            contactList.Add("Juan Pereira Freire", "juan.freire.397@gmail.com");
+            contactList.Add("Ricardo Carvalho lima", "ranchoaloisiolima@yahoo.com.br");
+            contactList.Add("Gabriel Dias Nocce", "gabriel.diasnocce@gmail.com");
+            contactList.Add("Luana Pires muller", "luhmuller2001@gmail.com");
+            contactList.Add("Helder Henrique Soares de freitas", "helder10freitas@gmail.com");
+            contactList.Add("Felipe Gabriel Ferreira Winter", "fehnalle@gmail.com");
+            contactList.Add("WAGNER NERY", "juniorwagner485@gmail.com");
+            contactList.Add("Natanael Ferreira da Silva", "fnatanael678@gmail.com");
+            contactList.Add("Marcelo Bertinatto D' Onofrio", "marcelobertinatto@hotmail.com");
 
             return contactList;
         }
